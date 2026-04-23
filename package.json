@@ -1,0 +1,28 @@
+{
+  "name": "internal-management-dashboard",
+  "version": "1.0.0",
+  "description": "admin panel",
+  "homepage": "https://github.com/BitByBit05/internal-management-dashboard#readme",
+  "bugs": {
+    "url": "https://github.com/BitByBit05/internal-management-dashboard/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BitByBit05/internal-management-dashboard.git"
+  },
+  "license": "ISC",
+  "author": "BitByBit05",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
