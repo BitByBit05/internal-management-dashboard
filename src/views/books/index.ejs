@@ -1,0 +1,54 @@
+<%- include('../partials/header') %>
+
+<h1>Book Library</h1>
+
+<!-- Search -->
+<form class="search-bar" action="/books" method="GET">
+  <input
+    type="text"
+    name="search"
+    placeholder="Search by title or author…"
+    value="<%= search %>"
+  />
+  <button class="btn btn-primary" type="submit">Search</button>
+  <% if (search) { %>
+    <a href="/books" class="btn btn-secondary">Clear</a>
+  <% } %>
+</form>
+
+<% if (books.length === 0) { %>
+  <p class="empty">
+    <% if (search) { %>
+      No books matched "<strong><%= search %></strong>".
+    <% } else { %>
+      No books yet. <a href="/books/new" style="color:var(--accent)">Add one!</a>
+    <% } %>
+  </p>
+<% } else { %>
+  <div class="grid">
+    <% books.forEach(book => { %>
+      <div class="card">
+        <span class="badge"><%= book.genre || 'Unknown' %></span>
+        <h2 style="margin-top:0.7rem;">
+          <a href="/books/<%= book.id %>" style="color:var(--text);text-decoration:none;">
+            <%= book.title %>
+          </a>
+        </h2>
+        <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem;">
+          by <em><%= book.author %></em>
+          <% if (book.published_year) { %> &middot; <%= book.published_year %><% } %>
+        </p>
+        <div style="display:flex;gap:0.5rem;">
+          <a href="/books/<%= book.id %>" class="btn btn-secondary">View</a>
+          <a href="/books/<%= book.id %>/edit" class="btn btn-secondary">Edit</a>
+          <form action="/books/<%= book.id %>?_method=DELETE" method="POST" style="display:inline;">
+            <button class="btn btn-danger" type="submit"
+              onclick="return confirm('Delete this book?')">Delete</button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

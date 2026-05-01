@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+
+<a href="/books" class="btn btn-secondary" style="margin-bottom:1.5rem;display:inline-block;">← Back</a>
+
+<div class="card" style="max-width:680px;">
+  <span class="badge"><%= book.genre || 'Unknown' %></span>
+  <h1 style="margin-top:0.8rem;"><%= book.title %></h1>
+
+  <table style="width:100%;margin:1.5rem 0;border-collapse:collapse;">
+    <% const fields = [
+      ['Author',         book.author],
+      ['Genre',          book.genre],
+      ['Published Year', book.published_year],
+      ['Added on',       new Date(book.created_at).toLocaleDateString('en-IN', { dateStyle:'long' })],
+    ]; %>
+    <% fields.forEach(([label, value]) => { %>
+      <% if (value) { %>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.7rem 0;color:var(--muted);font-family:'Courier New',monospace;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;width:150px;">
+            <%= label %>
+          </td>
+          <td style="padding:0.7rem 0;"><%= value %></td>
+        </tr>
+      <% } %>
+    <% }) %>
+  </table>
+
+  <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+    <a href="/books/<%= book.id %>/edit" class="btn btn-primary">Edit</a>
+    <form action="/books/<%= book.id %>?_method=DELETE" method="POST">
+      <button class="btn btn-danger" type="submit"
+        onclick="return confirm('Permanently delete this book?')">Delete</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

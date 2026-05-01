@@ -1,14 +1,14 @@
 import express from "express";
-import { initalizeDB, showTable } from "./models/dbInitialize.js";
+import {
+  getByTableName,
+  initalizeDB,
+  getAuthor,
+} from "./models/dbInitialize.js";
 
 const app = express();
-let tables = [];
-let tableInfo = [];
 
-const connectDb = async () => {
-  tables = await initalizeDB();
-  tableInfo = await showTable(["books"]);
-};
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("root dorectory");
@@ -16,10 +16,25 @@ app.get("/", (req, res) => {
 });
 
 app.get("/view", async (req, res) => {
-  await connectDb();
+  let tables = await initalizeDB();
   res.json({
     allTables: tables,
-    bookData: tableInfo,
+  });
+});
+
+app.post("/view", async (req, res) => {
+  let tableName = req.body.tableName;
+  let tableInfo = await getByTableName(tableName);
+  res.json({
+    table: tableInfo,
+  });
+});
+
+app.post("/author", async (req, res) => {
+  let authorName = req.body.authorName;
+  let author = await getAuthor(authorName);
+  res.json({
+    author: author,
   });
 });
 
