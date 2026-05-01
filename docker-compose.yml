@@ -1,0 +1,49 @@
+services:
+  app:
+    build: .
+    container_name: books-app
+    restart: always
+    ports:
+      - "3000:8080"
+    env_file:
+      - .env
+    environment:
+      # This overrides the DB_HOST in your .env to point to the container name
+      - DB_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: books-db
+    restart: always
+    env_file:
+      - .env
+    # Variables below use the values from your .env file
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # Automatically runs your schema/tables on first startup
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:

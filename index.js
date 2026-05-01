@@ -4,10 +4,10 @@ import "dotenv/config";
 
 const startServer = async () => {
   //import port from .env
-  const PORT = conf.port;
+  const PORT = process.env.PORT || 3000;
 
-  app.listen(PORT, () => {
-    console.log("Request recieved...");
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server is running on port ${PORT}`);
   });
 };
 
