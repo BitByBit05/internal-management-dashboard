@@ -3,12 +3,11 @@ services:
     build: .
     container_name: books-app
     restart: always
-    ports:
-      - "3000:8080"
+    expose:
+      - "8080"
     env_file:
       - .env
     environment:
-      # This overrides the DB_HOST in your .env to point to the container name
       - DB_HOST=db
     depends_on:
       db:
@@ -22,16 +21,15 @@ services:
     restart: always
     env_file:
       - .env
-    # Variables below use the values from your .env file
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+    # TIP: In production, remove these ports so the DB isn't public
     ports:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
-      # Automatically runs your schema/tables on first startup
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
@@ -41,9 +39,25 @@ services:
     networks:
       - app-network
 
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   db-data:
+  caddy_data:
+  caddy_config:
