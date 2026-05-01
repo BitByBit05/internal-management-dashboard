@@ -1,41 +1,37 @@
 import express from "express";
-import {
-  getByTableName,
-  initalizeDB,
-  getAuthor,
-} from "./models/dbInitialize.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import booksRouter from "./routes/booksRouter.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// ── View engine ──────────────────────────────────────────────────────────────
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// ── Middleware ────────────────────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../public")));
 
-app.get("/", (req, res) => {
-  res.send("root dorectory");
-  console.log("request recieved on root directory");
+// ── Routes ────────────────────────────────────────────────────────────────────
+app.use("/books", booksRouter);
+
+// Root redirect
+app.get("/", (req, res) => res.redirect("/books"));
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).render("error", { message: "Page not found", code: 404 });
 });
 
-app.get("/view", async (req, res) => {
-  let tables = await initalizeDB();
-  res.json({
-    allTables: tables,
-  });
-});
-
-app.post("/view", async (req, res) => {
-  let tableName = req.body.tableName;
-  let tableInfo = await getByTableName(tableName);
-  res.json({
-    table: tableInfo,
-  });
-});
-
-app.post("/author", async (req, res) => {
-  let authorName = req.body.authorName;
-  let author = await getAuthor(authorName);
-  res.json({
-    author: author,
-  });
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render("error", { message: err.message, code: 500 });
 });
 
 export default app;
