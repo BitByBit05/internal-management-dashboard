@@ -1,5 +1,5 @@
 # Stage 1: Dependency Loader
-FROM node:22-alpine AS dependencies
+FROM node:24-alpine AS dependencies
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY package*.json ./
 RUN npm install
 
 # Stage 2: Final Runner
-FROM node:22-slim AS runner
+FROM node:24-alpine AS runner
 
 # Set production environment
 ENV NODE_ENV=production
