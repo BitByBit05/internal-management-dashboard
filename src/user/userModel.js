@@ -10,3 +10,9 @@ export async function checkExisting(email) {
   const { rows } = await pool.query(query, [email]);
   return rows.length > 0;
 }
+
+export async function getPassword(email) {
+  const query = `SELECT password FROM users WHERE email = $1`;
+  const { rows } = await pool.query(query, [email]);
+  return rows[0].password;
+}

@@ -10,5 +10,6 @@ userRouter.get("/", (req, res) => {
 });
 
 userRouter.post("/register", ctrl.registerUser);
+userRouter.post("/login", ctrl.loginUser);
 
 export default userRouter;
