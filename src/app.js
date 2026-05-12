@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import booksRouter from "./routes/booksRouter.js";
+import booksRouter from "./books/booksRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,15 +23,23 @@ app.use("/books", booksRouter);
 // Root redirect
 app.get("/", (req, res) => res.redirect("/books"));
 
-// 404 handler
+// Fix 404 Handler
 app.use((req, res) => {
-  res.status(404).render("error", { message: "Page not found", code: 404 });
+  res.status(404).render("error", {
+    message: "Page not found",
+    code: 404,
+    title: "404 Not Found", // Pass title here
+  });
 });
 
-// Global error handler
+// Fix Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).render("error", { message: err.message, code: 500 });
+  res.status(500).render("error", {
+    message: err.message,
+    code: 500,
+    title: "Internal Server Error", // Pass title here
+  });
 });
 
 export default app;

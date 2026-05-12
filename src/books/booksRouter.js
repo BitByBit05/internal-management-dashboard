@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import ctrl from "../controllers/booksController.js";
+import ctrl from "./booksController.js";
 
 // Support PUT/DELETE from HTML forms via ?_method=
 import methodOverride from "method-override";

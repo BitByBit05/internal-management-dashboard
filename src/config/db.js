@@ -1,4 +1,3 @@
-import { config } from "dotenv";
 import { Pool } from "pg";
 
 const pool = new Pool({
@@ -16,9 +15,9 @@ const pool = new Pool({
 // Verify connection on startup
 pool.connect((err, client, release) => {
   if (err) {
-    console.error("❌ Failed to connect to PostgreSQL:", err.message);
+    console.error("Failed to connect to PostgreSQL:", err.message);
   } else {
-    console.log("✅ Connected to PostgreSQL");
+    console.log("Connected to PostgreSQL");
     release();
   }
 });

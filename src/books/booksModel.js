@@ -7,7 +7,8 @@ import pool from "../config/db.js";
  * @param {string} [search] - Optional title/author search string
  * @returns {Promise<Array>}
  */
-export async function getAllBooks(search = "") {
+//ternary operator
+export async function getAllBooks(search = "") /* Default Parameters*/ {
   const query = search
     ? `SELECT * FROM books
        WHERE title ILIKE $1 OR author ILIKE $1
@@ -73,8 +74,6 @@ export async function updateBook(id, { title, author, genre, published_year }) {
  * @returns {Promise<boolean>} True if a row was deleted
  */
 export async function deleteBook(id) {
-  const { rowCount } = await pool.query("DELETE FROM books WHERE id = $1", [
-    id,
-  ]);
+  const { rowCount } = await pool.query("DELETE FROM books WHERE id = $1", [id]);
   return rowCount > 0;
 }

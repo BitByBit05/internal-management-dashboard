@@ -1,10 +1,4 @@
-import {
-  getAllBooks,
-  getBookById,
-  createBook,
-  updateBook,
-  deleteBook,
-} from "../models/booksModel.js";
+import { getAllBooks, getBookById, createBook, updateBook, deleteBook } from "./booksModel.js";
 
 // GET /books  — list all (with optional ?search=)
 async function index(req, res, next) {
@@ -21,10 +15,7 @@ async function index(req, res, next) {
 async function show(req, res, next) {
   try {
     const book = await getBookById(req.params.id);
-    if (!book)
-      return res
-        .status(404)
-        .render("error", { message: "Book not found", code: 404 });
+    if (!book) return res.status(404).render("error", { message: "Book not found", code: 404 });
     res.render("books/detail", { book, title: book.title });
   } catch (err) {
     next(err);
@@ -55,10 +46,7 @@ async function create(req, res, next) {
 async function editForm(req, res, next) {
   try {
     const book = await getBookById(req.params.id);
-    if (!book)
-      return res
-        .status(404)
-        .render("error", { message: "Book not found", code: 404 });
+    if (!book) return res.status(404).render("error", { message: "Book not found", code: 404 });
     res.render("books/form", {
       book,
       title: `Edit: ${book.title}`,
@@ -74,10 +62,7 @@ async function editForm(req, res, next) {
 async function update(req, res, next) {
   try {
     const updated = await updateBook(req.params.id, req.body);
-    if (!updated)
-      return res
-        .status(404)
-        .render("error", { message: "Book not found", code: 404 });
+    if (!updated) return res.status(404).render("error", { message: "Book not found", code: 404 });
     res.redirect(`/books/${req.params.id}`);
   } catch (err) {
     next(err);
